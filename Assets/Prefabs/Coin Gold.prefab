@@ -5019,6 +5019,7 @@ GameObject:
   - component: {fileID: 7841495336695108124}
   - component: {fileID: 2577036081932688747}
   - component: {fileID: 6120127621697433558}
+  - component: {fileID: 5301590729201923984}
   m_Layer: 0
   m_Name: Coin Gold
   m_TagString: Item
@@ -5113,3 +5114,17 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5301590729201923984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7044695974566997180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d060d535c6c49a5449bd4e4235eb87e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+  value: 8
