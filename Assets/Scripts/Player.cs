@@ -11,6 +11,17 @@ public class Player : MonoBehaviour
     public float speed = 15.0f;
     public GameObject[] weapons;
     public bool[] hasWeapons;
+    public GameObject[] grenades;
+    public int hasGrenades;
+
+    public int ammo;
+    public int coin;
+    public int health;
+
+    public int maxammo;
+    public int maxcoin;
+    public int maxhealth;
+    public int maxhasGrenades;
 
     bool wDown;
     bool jDown;
@@ -186,6 +197,44 @@ public class Player : MonoBehaviour
             isJump = false;
         }
     }
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag=="Item")
+        {
+            Item item = other.GetComponent<Item>();
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxammo)
+                    {
+                        ammo = maxammo;
+                    }
+                    break;
+                case Item.Type.Coin: 
+                    coin+= item.value;
+                    if(coin>maxcoin)
+                    {
+                        coin = maxcoin;
+                    }
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if(health>maxhealth)
+                    {
+                        health = maxhealth;
+                    }
+                    break;
+                case Item.Type.Grenade:
+                    if (hasGrenades == maxhasGrenades)
+                        return;
+                    grenades[hasGrenades].SetActive(true);
+                    hasGrenades += item.value;
+                    break;
+            }
+            Destroy(other.gameObject);
+        }
+    }
 
     void OnTriggerStay(Collider other)
     {
@@ -196,6 +245,7 @@ public class Player : MonoBehaviour
            // Debug.Log(nearObject.name);
         }
     }
+
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Weapon")

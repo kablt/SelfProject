@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1547587319542454326}
   m_Layer: 0
   m_Name: Weapon Grenade
-  m_TagString: Weapon
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,7 +101,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  value: 3
+  value: 1
 --- !u!1 &6385422260734694892
 GameObject:
   m_ObjectHideFlags: 0
