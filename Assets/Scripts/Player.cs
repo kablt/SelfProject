@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public bool[] hasWeapons;
     public GameObject[] grenades;
     public int hasGrenades;
+    public Camera followcamera;
 
     public int ammo;
     public int coin;
@@ -26,12 +27,14 @@ public class Player : MonoBehaviour
     bool wDown;
     bool jDown;
     bool fDown;
+    bool rDown;
 
     bool isJump;
     bool isDodge;
     bool iDown;
     bool isSwap;
     bool isFireReady= true;
+    bool isreload;
 
     bool sDown1;
     bool sDown2;
@@ -72,6 +75,7 @@ public class Player : MonoBehaviour
         Interation();
         Swap();
         Attack();
+        Reload();
     }
 
     void GetInput()
@@ -81,10 +85,11 @@ public class Player : MonoBehaviour
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
         iDown = Input.GetButtonDown("Interation");
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
         sDown3 = Input.GetButtonDown("Swap3");
+        rDown = Input.GetButtonDown("Reload");
     }
 
     void Move()
@@ -95,7 +100,7 @@ public class Player : MonoBehaviour
         {
             moveVec = dodgeVec;
         }
-        if (isSwap || !isFireReady)
+        if (isSwap || !isFireReady || isreload)
         {
             moveVec = Vector3.zero;
         }
@@ -109,8 +114,19 @@ public class Player : MonoBehaviour
 
     void Turn()
     {
-        //우리위치에 우리가 나아가야할 방향을 더해준다.
+        //키보드에 의한 회전
         transform.LookAt(transform.position + moveVec);
+        //마우스에 의한 회전
+        if (fDown) { 
+        Ray ray = followcamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayhit;
+            if (Physics.Raycast(ray, out rayhit, 100))
+            {
+                Vector3 nextVec = rayhit.point - transform.position;
+                nextVec.y = 0;
+                transform.LookAt(transform.position + nextVec);
+            }
+        }
     }
 
     void Jump()
@@ -139,6 +155,32 @@ public class Player : MonoBehaviour
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee? "doSwing": "doShot");
             fireDelay = 0;
         }
+    }
+
+    void Reload()
+    {
+        if (equipWeapon == null)
+            return;
+
+        if (equipWeapon.type == Weapon.Type.Melee)
+            return;
+        if (ammo == 0)
+            return;
+        if(rDown && !isJump && !isDodge && !isSwap && isFireReady)
+        {
+            anim.SetTrigger("doReload");
+            isreload = true;
+
+            Invoke("ReloadOut", 2f);
+        }
+    }
+
+    void ReloadOut()
+    {
+        int reAmmo = ammo < equipWeapon.maxAmmo ? ammo: equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = reAmmo;
+        ammo -= reAmmo;
+        isreload = false;
     }
 
     void Dodge()
