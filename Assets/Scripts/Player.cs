@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     bool isSwap;
     bool isFireReady= true;
     bool isreload;
+    bool isBorder;
 
     bool sDown1;
     bool sDown2;
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
     Weapon equipWeapon;
     int equipWeaponIndex=-1;
     float fireDelay;
+
 
     void Awake()
     {
@@ -104,8 +107,11 @@ public class Player : MonoBehaviour
         {
             moveVec = Vector3.zero;
         }
+        if(!isBorder)
+        {
         //wDown(Walk)상태일때 속력값에 0.3곱해 이동을 느리게 한다. false시 기본속도 유지를 위해 *1f를 뒤에 써준다
         transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
+        }
 
         anim.SetBool("IsRun", moveVec != Vector3.zero); //moveVec가 Vector3.zero이면 움직임이 없다는뜻, 즉 가만히 있는게 아니라면 IsRun은 True로 해준다
         anim.SetBool("IsWalk", wDown);//input amanager에 등록되있는 Walk의 단축키 left shift가 눌렸을 경우, IsWalk를 True로 만들어준다는 뜻
@@ -251,6 +257,23 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    void FreezeRotation()
+    {
+        rb.angularVelocity = Vector3.zero;
+    }
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isBorder = Physics.Raycast(transform.position, moveVec,5, LayerMask.GetMask("Wall"));
+    }
+
+    private void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
+    }
+
 
 
     private void OnCollisionEnter(Collision collision)
